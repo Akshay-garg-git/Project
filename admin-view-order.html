@@ -1,0 +1,284 @@
+
+<div class="container-fluid">
+
+	<!-- Show the loader -->
+	<div class="lds-spinner" *ngIf="show == true"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+
+	<!--Start Confirm dialogue -->
+	<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+	<!-- End -->
+
+	<!-- start Use for show the success and error message toast. -->
+	<div class="content-section implementation">
+
+		<p-toast [style]="{marginTop: '40px'}"></p-toast>
+
+		<p-toast [style]="{marginTop: '40px'}" styleClass="custom-toast" key="custom" position="top-left" key="tl"></p-toast>
+
+	</div>
+	<!-- End -->
+
+	<section class="content-header">
+		<h1 style="display: inline-block;">
+			Order Information
+		</h1>
+		<ol class="breadcrumb">
+			<li>
+				<a href="" routerLink="/dashboard"><i class="fa fa-dashboard"></i><span> Dashboard&nbsp;</span></a>
+			</li>
+			<li class="active"> / View Order</li>
+		</ol>
+	</section>
+
+	<div class="row" style="margin-top: 10px; margin-bottom: 20px; " *ngIf="show == false">
+
+		
+		<div class="col-lg-12 col-md-12">
+
+			<div class="row" style="margin-bottom: 20px; margin-right: 12px;">
+
+				<a type="button" class="btn btn-info pull-right" [href]="environment.apiUrl + '/order_invoice/' + new_order.uuid + '/admin'" style="margin-left: 12px;">
+		        	Invoice Generate
+		        </a>
+
+		    </div>
+
+			<div class="form-group well" style="margin-top: 20px; background-color: white;">
+
+				<div class="row">
+					<div class="col-sm-6">
+						<h3>Seller Information</h3>
+					</div>
+				</div>
+
+				<div class="row" style="border-top: 1px solid gray; margin-top: 20px; padding-top: 20px;">
+					<div class="col-sm-4">
+						<label>Order Id: &nbsp;&nbsp;&nbsp;</label>{{ new_order.order_id }}
+					</div>
+					<!-- <input type="text" [(ngModel)]="new_order.order_id" placeholder="Name" class="form-control" disabled /> -->
+					<div class="col-sm-4 text-center">
+						<label>Order Status: &nbsp;&nbsp;&nbsp;</label>
+							<span class="label" [ngClass]="new_order.status == 0 ? 'label-warning' : new_order.status == 1 ? 'label-success': new_order.status == 2 ? 'label-success' : new_order.status == 3 ? 'label-info' : new_order.status == 4 ? 'label-default': 'label-danger'  " style="padding:4px;">
+								{{ new_order.status == 0 ? 'Initialized' : new_order.status == 1 ? 'Placed' : new_order.status == 2 ? 'Confirmed' : new_order.status == 3 ? 'Shipped' : new_order.status == 4 ? 'Dispatched' : 'Delivered' }}
+							</span>
+
+					</div>
+					<div class="col-sm-4 text-right">
+						<label>Paid: &nbsp;&nbsp;&nbsp;</label>
+							<span calss="label" [ngClass]="new_order.is_paid == 0 ? 'label-danger' : 'label-success'  " style="padding:4px;">
+								{{ new_order.is_paid == 0 ? 'Not Paid' : 'Paid' }}
+							</span>
+					</div>
+				</div>
+			
+				
+				<div class="row" style="border-top: 1px solid gray; margin-top: 20px; padding-top: 20px;" *ngFor="let seller_order of new_order.saller_orders">
+
+					<div class="col-sm-4">
+						<label>Name: &nbsp;&nbsp;&nbsp;</label>{{ seller_order.saller.name }}
+					</div>
+				
+					<div class="col-sm-4">
+						<label>Mobile: &nbsp;&nbsp;&nbsp;</label>{{ seller_order.saller.mobile }}
+					</div>
+
+					<div class="col-sm-4">
+						<label>E-mail: &nbsp;&nbsp;&nbsp;</label>{{ seller_order.saller.email }}
+					</div>
+
+					<div class="col-sm-4">
+						<label>Country: &nbsp;&nbsp;&nbsp;</label>{{ seller_order.saller.country }}
+					</div>
+					
+					<div class="col-sm-4">
+						<label>State: &nbsp;&nbsp;&nbsp;</label>{{ seller_order.saller.state }}
+					</div>
+					
+					<div class="col-sm-4">
+						<label>City: &nbsp;&nbsp;&nbsp;</label>{{ seller_order.saller.city }}
+					</div>
+					
+				</div>
+				
+			</div>
+			
+			<div class="panel-body table-responsive table-bordered" style="background-color: white;">	
+				<div class="row" style="border-bottom: 1px solid gray; padding-bottom: 20px;">
+					<div class="col-sm-6">
+						<h3>Products Information</h3>
+					</div>
+				</div>
+				      		
+		  		<table class="table table-borderless" style="font-size: 15px; margin-top: 20px; padding-top: 20px;">
+				    <thead>
+				      <tr>
+				      	<th>Image</th>
+				        <th>Product Name</th>
+				        <th>Color</th>
+						<th>Size</th>
+				        <th>Quantity</th>
+				        <th>Price</th>
+				        <th>Amount</th>
+				      </tr>
+				    </thead>
+
+				    <tbody *ngFor="let order_product of new_order.order_products">
+				      <tr>
+				      	<td>
+							<a href="{{ environment.imageUrl + order_product.p_image }}" target="_blank">
+								<img src="{{ environment.imageUrl + order_product.p_image }}"  style="height: 53px;">
+							</a>
+						</td>
+				        <td>{{ order_product.p_name }}.</td>
+				        <td>
+							<span *ngIf="order_product.saller_product_variant1 != null">
+								<li class="variant-type-color color-dot variant-active" style="display: inline-block;padding: 2px !important;">
+									<a class="color-dot" [style.background-color]="order_product.saller_product_variant1.product_variant.variant_value" style="width: 13px; height: 13px;">
+										
+									</a>
+								</li>
+							</span>
+							
+						</td>
+						<td>
+							<span  *ngIf="order_product.saller_product_variant2 != null">
+								<li class="variant-type-rect variant-active" style="display: inline-block; margin: 1em 1em 1em 0; width: 23px; margin-top: 0px;"> {{ order_product.saller_product_variant2.product_variant.variant_value }}
+								</li>
+							</span>
+						</td>
+				        <td> {{ order_product.quantity }}</td>
+				        <td> {{ order_product.price }}</td>
+				        <td> {{ order_product.quantity * order_product.price }}</td>
+				      </tr>
+				     </tbody>
+			  	</table>
+
+			</div>
+
+			<form (submit)="updateNewOrder();">
+				
+				<div class="form-group well" style="margin-top: 20px; background-color: white;">
+
+					<div class="row">
+						<div class="col-sm-6">
+							<h3>Shipping Information</h3>
+						</div>
+						<!-- <div class="col-sm-6">
+							<label>Order Id: &nbsp;&nbsp;&nbsp;</label>{{ new_order.order_id }}
+						</div> -->
+						<!-- <input type="text" [(ngModel)]="new_order.order_id" placeholder="Name" class="form-control" disabled /> -->
+						<!-- <div class="col-sm-6 text-right">
+							<label>Paid: &nbsp;&nbsp;&nbsp;</label>{{ new_order.is_paid == 0 ? 'Not Paid' : 'Paid' }}
+						</div> -->
+					</div>
+					
+					<!-- <p>
+						<label>Status: &nbsp;&nbsp;&nbsp;</label>{{ new_order.status }}
+					</p> -->
+					
+					<div class="row" style="border-top: 1px solid gray; margin-top: 20px; padding-top: 20px;" *ngIf="new_order.shipping_address">
+
+						<!-- *ngFor="let new_order.shipping_address of new_order.shipping_address"	 -->
+					
+						<div class="col-sm-4">
+							<label>Name: &nbsp;&nbsp;&nbsp;</label>{{ new_order.shipping_address.name }}
+						</div>
+					
+						<div class="col-sm-4">
+							<label>Address: &nbsp;&nbsp;&nbsp;</label>{{ new_order.shipping_address.address }}
+						</div>
+						
+						<div class="col-sm-4">
+							<label>Alt Mobile: &nbsp;&nbsp;&nbsp;</label>{{ new_order.shipping_address.alt_mobile }}
+						</div>
+					
+						<div class="col-sm-4">
+							<label>City: &nbsp;&nbsp;&nbsp;</label>{{ new_order.shipping_address.city }}
+						</div>
+						
+						<div class="col-sm-4">
+							<label>Country: &nbsp;&nbsp;&nbsp;</label>{{ new_order.shipping_address.country }}
+						</div>
+						
+						<div class="col-sm-4">
+							<label>E-mail: &nbsp;&nbsp;&nbsp;</label>{{ new_order.shipping_address.email }}
+						</div>
+						
+						<div class="col-sm-4">
+							<label>Landmark: &nbsp;&nbsp;&nbsp;</label>{{ new_order.shipping_address.landmark }}
+						</div>
+						
+						<div class="col-sm-4">
+							<label>Mobile: &nbsp;&nbsp;&nbsp;</label>{{ new_order.shipping_address.mobile }}
+						</div>
+					
+						<div class="col-sm-4">
+							<label>State: &nbsp;&nbsp;&nbsp;</label>{{ new_order.shipping_address.state }}
+						</div>
+					
+						<div class="col-sm-4">
+							<label>Pin Code: &nbsp;&nbsp;&nbsp;</label>{{ new_order.shipping_address.zip }}
+						</div>
+					
+					</div>
+					
+				</div>
+
+				<div class="row" style="border-top: 1px solid gray; margin-top: 20px; padding-top: 20px; background-color: white;">
+
+					<div class="col-md-6">
+						
+					</div>
+
+					<div class="col-md-6 well">
+
+						<!--  <div class="form-group">
+							<label>Tracking id</label>
+							<input type="text" [(ngModel)]="new_order.tracking_id" placeholder="tracking id" class="form-control"/>
+						</div>
+						<div class="form-group">
+							<label>Tracking Url</label>
+							<input type="text" name="tracking_url" [(ngModel)]="new_order.tracking_url" placeholder="Tracking Url" class="form-control"/>
+						</div>
+						<div class="form-group">
+							<label>Message</label>
+							<textarea type="text" name="msg" [(ngModel)]="new_order.msg" placeholder="Message" class="form-control" cols="6"></textarea>
+						</div>  -->
+
+						<!-- Update order -->
+						<div class="form-group">
+							<label>Update Order Status</label>
+							<select class="form-control" name="status" [(ngModel)]="new_order.status">
+
+								<option value=""> -- Please update status -- </option>
+								<option value="0"> Initialized </option>
+								<option value="1"> Placed </option>
+								<option value="2"> Confirmed </option>
+								<!-- <option value="3"> Shipped </option>
+								<option value="4"> Dispatched </option>
+								<option value="5"> Delivered </option> -->
+
+							</select>
+						</div>
+
+						<div class="form-group">
+					
+							<button type="submit" class="btn btn-success pull-right" style="margin-right: 12px;" [disabled]="btn_update == true">
+
+								<i class="fa fa-spinner fa-spin" *ngIf="btn_update == true"></i>&nbsp;&nbsp;Update
+
+							</button>
+							
+						</div>
+
+					</div>
+				</div>
+
+			</form>
+
+		</div>
+		
+
+	</div>
+
+</div>
